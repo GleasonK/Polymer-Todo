@@ -1,0 +1,28 @@
+{
+  "name": "ToDo",
+  "version": "0.0.0",
+  "authors": [
+    "Kevin Gleason <kaagleason@gmail.com>"
+  ],
+  "description": "A ToDo List using PubNub and Polymer",
+  "main": "index.html",
+  "keywords": [
+    "Polymer",
+    "PubNub",
+    "Todo",
+    "List"
+  ],
+  "license": "MIT",
+  "homepage": "http://kevingleason.me/Todo/index.html",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.0.0",
+    "pubnub-element": "~4.0.0"
+  }
+}

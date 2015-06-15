@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<link href="../elements/todo-element.html" rel="import">
+	<link href="../bower_components/paper-drawer-panel/paper-drawer-panel.html" rel="import">
+	<link href="../bower_components/paper-header-panel/paper-header-panel.html" rel="import">
+	<link href="../bower_components/paper-toolbar/paper-toolbar.html" rel="import">
+	<link href="../bower_components/paper-icon-button/paper-icon-button.html" rel="import">
+	<link href="../bower_components/paper-material/paper-material.html" rel="import">
+	<link href="../bower_components/paper-menu/paper-menu.html" rel="import">	
+	<link href="../bower_components/paper-item/paper-item.html" rel="import">
+	<link href="../bower_components/paper-input/paper-input.html" rel="import">
+	<link href="../bower_components/iron-icons/iron-icons.html" rel="import">
+	<link href="../bower_components/iron-input/iron-input.html" rel="import">
+	<link href="../bower_components/pubnub-element/pubnub-element.html" rel="import">
+
+</head>
+
+<dom-module id="todo-app">
+	<style>
+	.list {
+		padding: 0;
+		border-right: 1px solid #ccc;
+	}
+	
+	.list paper-item {
+		min-height: 80px;
+		border-bottom: 1px solid #dedede;
+		background-color: #fafafa;
+	}
+	
+	#todoEntry {
+		margin: 0;
+		width: 100%;
+		max-width: none;
+		border-bottom: 1px solid #ccc;
+	}
+	
+	paper-input {
+		margin: 0 4vw;
+		padding: 0;
+	}
+	
+	paper-material {
+		background-color: #fff;
+		max-width: 640px;
+		width: 95%;
+		margin: 25px auto;
+		position: relative;
+	}
+	
+	#todos {
+		overflow-y: scroll;
+		height: 66vh;
+	}
+
+	#todos {
+		overflow-y: scroll;
+	}
+  
+	paper-fab {
+	    position: absolute;
+	    background: #3f51b5;
+	    bottom: 2vh;
+	    right: 2vw;
+    }
+
+	.main-panel {
+		background-color: #eee;
+	}	
+
+	</style>
+  
+	<template>
+		<paper-drawer-panel>
+			<paper-header-panel class="side-panel" drawer>
+				<paper-toolbar>
+					<paper-item>Completed Tasks</paper-item>
+				</paper-toolbar>
+				<paper-menu id="completed" class="list">
+					<template id="done" is="dom-repeat" items="{{done}}">
+						<paper-item>{{item.task}}<i style="margin-left: 5px;">{{item.user}}</i></paper-item>
+					</template>
+				</paper-menu>
+			</paper-header-panel>
+			<paper-header-panel main class="main-panel" flex>
+				<paper-toolbar flex>
+					<paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
+					<paper-item>Active Tasks</paper-item>
+				</paper-toolbar>
+				<div style="border-left: 1px solid #ccc;">
+					<!-- To create a new Todo -->
+					<paper-material id="todoEntry" flex>
+						<paper-input id="tTask" label="Task"></paper-input>
+						<paper-input id="tUser" char-counter label="Username" maxlength="16" error="maximum characters exceeded" style="width:75%;display: inline-block" ></paper-input> 
+						<paper-fab icon="icons:add" on-tap="postTask"></paper-fab>
+					</paper-material>
+					<div id="todos" flex>
+						<template id="tasks" is="dom-repeat" items="{{todo}}">
+							<todo-element user="{{item.user}}" task="{{item.task}}" rid="{{item.rid}}"></todo-element>
+						</template>
+					</div>
+				</div>
+			</paper-header-panel>
+		</paper-drawer-panel> 
+		<core-pubnub 
+	        publish_key="demo" 
+	        subscribe_key="demo">
+	        <core-pubnub-publish id="pub" channel="todo" message="Hello"> </core-pubnub-publish>
+	        <core-pubnub-subscribe id="sub" channel="todo" messages="{{messages}}" on-callback="subscribeCallback">     
+        </core-pubnub> 
+	</template>
+</dom-module>
+
+<script>
+  // element registration
+  Polymer({
+    is: "todo-app",
+
+    // add properties and methods on the element's prototype
+
+    properties: {
+    	// declare properties for the element's public API
+		todo: {
+			type: Array,
+			value: [{user:"Kevin",task:"RUN",rid:0}, {user:"Justin",task:"CODE",rid:1}, {user:"Tomomi",task:"Think of task.",rid:2}]
+		},
+		done:{
+			type:Array,
+			value: []
+		},
+		messages: {
+			type: Array,
+			value: []
+		}
+    },
+    handleComplete: function(e){
+	    // this.$.completed.appendChild(e.target);
+	    var idx = findWithAttr(this.todo, 'rid', e.target.rid);
+	    var itm = this.todo[idx];
+	    itm.task = e.target.task;
+	    itm.user = this.$.tUser.value;
+	    itm.type = "done";
+	    this.$.pub.message = itm;
+	    this.$.pub.publish();
+	    //this.push('done',itm);
+    },
+    postTask: function(e) {
+	    var tsk = this.$.tTask.value;
+	    var usr = this.$.tUser.value;
+	    if (tsk==""){
+		    alert("Task is Empty!");
+		    return;
+		}
+	    if (usr==""){ usr = randItem(names1) + "-" + randItem(names2); }
+	    this.$.pub.message = {type:"todo", task:tsk, user:usr, rid:randID()};
+	    this.$.pub.publish()
+	    this.$.tTask.value = "";
+	    //this.unshift('todo', {user:user, task:task, id:randID()});	
+    },
+    subscribeCallback: function(e){
+	    console.log(e.target.messages[0]);
+	    console.log(this.messages[0].type + this.messages[0].task + this.messages[0].rid);
+	    while(this.messages.length > 0){
+		    var item = this.messages.pop();
+		    switch(item.type){
+			    case "todo":
+			    	this.unshift('todo', {task:item.task, user:item.user, rid:item.rid});
+			    	break;
+			    case "done":
+			    	var idx = findWithAttr(this.todo, 'rid',item.rid);
+			    	console.log("idx: " + idx);
+				    var itm = this.splice('todo', idx, 1)[0];
+				    itm.task = item.task;
+				    itm.user = item.user;
+				    this.push('done',itm);
+				    break;
+				default:
+					continue;
+		    }
+	    }
+    },
+	ready: function(e){
+		this.addEventListener('complete', this.handleComplete);
+		console.log(this.todo);
+		this.$.tUser.value = randItem(names1) + "-" + randItem(names2);
+	}
+  });
+  var names1 = ["red","orange","yellow","green","blue","indigo","purple"];
+  var names2 = ["hat","shoe","car","light","cat", "gnome"];
+  function randItem(arr){
+	  return arr[Math.floor(Math.random()*arr.length)];
+  }
+  function randID(){
+	return Math.floor(Math.random()*10000);
+  }
+  function findWithAttr(array, attr, value) {
+    for(var i = 0; i < array.length; i += 1) {
+        if(array[i][attr] === value) {
+            return i;
+        }
+    }
+  }
+</script>

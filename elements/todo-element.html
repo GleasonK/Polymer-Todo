@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link href="../bower_components/polymer/polymer.html" rel="import">
+	<link href="../bower_components/paper-checkbox/paper-checkbox.html" rel="import">
+	<link href="../bower_components/iron-input/iron-input.html" rel="import">
+	<link href="../bower_components/paper-button/paper-button.html" rel="import">
+	<link href="../bower_components/paper-item/paper-item.html" rel="import">
+	<link href="../bower_components/paper-input/paper-input.html" rel="import">
+	<link href="../bower_components/paper-material/paper-material.html" rel="import">
+	<link href="../bower_components/iron-icons/iron-icons.html" rel="import">
+	<link href="../bower_components/paper-fab/paper-fab.html" rel="import">
+</head>
+
+<dom-module id="todo-element" attributes="task user rid">
+  <style>
+    /* CSS rules for your element */
+    .todo {
+		padding: 10px;
+	}
+    
+    paper-checkbox {
+	    float: right;
+	    margin: 2vh 2vw;
+	}
+    
+    paper-button {
+	    background: #ccc;
+    }
+    
+    paper-fab {
+	    position: absolute;
+	    bottom: 3vh;
+	    right: 3vw;
+    }
+    
+    .done {
+	    background: green;
+    }
+    
+    .info {
+	    font-style: italic;
+	    font-size: 14px;
+	    color: #696969;
+		padding-top: 0;
+		padding-bottom: 0;
+    }
+    
+    paper-material {
+		background-color: #fff;
+		max-width: 640px;
+		width: 90%;
+		margin: 25px auto;
+		position: relative;
+	}
+    
+    .info span {
+	    margin-left: 5px;
+    }
+    
+    paper-input {
+		margin: 0 2vw;
+	}
+    
+  </style>
+  <template>
+    <!-- local DOM for your element -->
+	
+    <paper-material class="todo">
+	    <paper-checkbox checked="{{completed}}"></paper-checkbox>
+	    <paper-fab hidden={{editing}}  icon="icons:create" on-tap="doEdit" class="edit" mini></paper-fab>
+	    <paper-fab hidden={{!editing}} icon="icons:done"   on-tap="doEdit" class="done" mini></paper-fab>
+	    <paper-item hidden="{{editing}}" id="task">{{task}}</paper-item>
+	    <paper-input id="edit" hidden="{{!editing}}" value="{{task}}"></paper-input>
+	    <paper-item class="info">Created by: <span>{{ user }}</span></paper-item>
+	    <paper-item class="info">{{ time }}</paper-item>
+    </paper-material> <!-- data bindings in local DOM -->
+
+  </template>
+</dom-module>
+
+<script>
+  // element registration
+  Polymer({
+    is: "todo-element",
+
+    // add properties and methods on the element's prototype
+
+    properties: {
+    	// declare properties for the element's public API
+		user: {
+			type: String,
+			value: ""	
+		},
+		task: {
+        	type: String,
+			value: "Hello!"
+    	},
+    	rid: {
+	    	type: Number,
+	    	value: -1
+    	},
+    	time: {
+	    	type: String,
+	    	value: new Date().toLocaleString()//.toLocaleDateString()//, toLocaleTimeString()
+    	},
+		completed: {
+	    	type: Boolean,
+			value: false,
+			observer:'compChanged'
+    	},
+    	editing: {
+	    	type: Boolean,
+	    	value: false	
+    	}
+    },
+    compChanged: function(e){
+	    if(e){ this.fire('complete',this); }
+    },
+    doEdit: function(e){
+    	this.editing=!this.editing;
+	},
+	ready: function(e){
+	}
+  });
+</script>
