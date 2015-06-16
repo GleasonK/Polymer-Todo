@@ -68,7 +68,15 @@
 
 	.main-panel {
 		background-color: #eee;
-	}	
+		height: 100vh;
+		overflow-y: hidden;
+	}
+	
+	.task-empty paper-item {
+		text-align: center;
+		padding: 25px;
+		color: #6f6f6f;
+	}
 
 	</style>
   
@@ -79,6 +87,11 @@
 					<paper-item>Completed Tasks</paper-item>
 				</paper-toolbar>
 				<paper-menu id="completed" class="list">
+					<template is="dom-if" if="{{!done.length}}">
+						<paper-material class="task-empty">
+							<paper-item>Completed tasks will appear here!</paper-item>
+						</paper-material>
+					</template>
 					<template id="done" is="dom-repeat" items="{{done}}">
 						<paper-item>{{item.task}}<i style="margin-left: 5px;">{{item.user}}</i></paper-item>
 					</template>
@@ -97,6 +110,11 @@
 						<paper-fab icon="icons:add" on-tap="postTask"></paper-fab>
 					</paper-material>
 					<div id="todos" flex>
+						<template is="dom-if" if="{{!todo.length}}">
+							<paper-material class="task-empty">
+								<paper-item>No Tasks remain. Updates are Real-Time so stay tuned!</paper-item>
+							</paper-material>
+						</template>
 						<template id="tasks" is="dom-repeat" items="{{todo}}">
 							<todo-element user="{{item.user}}" task="{{item.task}}" rid="{{item.rid}}"></todo-element>
 						</template>
@@ -124,7 +142,7 @@
     	// declare properties for the element's public API
 		todo: {
 			type: Array,
-			value: [{user:"Kevin",task:"RUN",rid:0}, {user:"Justin",task:"CODE",rid:1}, {user:"Tomomi",task:"Think of task.",rid:2}]
+			value: []//[{user:"Kevin",task:"RUN",rid:0}, {user:"Justin",task:"CODE",rid:1}, {user:"Tomomi",task:"Think of task.",rid:2}]
 		},
 		done:{
 			type:Array,
@@ -133,6 +151,10 @@
 		messages: {
 			type: Array,
 			value: []
+		},
+		test: {
+			type: Boolean,
+			value: true
 		}
     },
     handleComplete: function(e){
