@@ -3,13 +3,14 @@
 <head>
 	<link href="../bower_components/polymer/polymer.html" rel="import">
 	<link href="../bower_components/paper-checkbox/paper-checkbox.html" rel="import">
-	<link href="../bower_components/iron-input/iron-input.html" rel="import">
-	<link href="../bower_components/paper-button/paper-button.html" rel="import">
 	<link href="../bower_components/paper-item/paper-item.html" rel="import">
 	<link href="../bower_components/paper-input/paper-input.html" rel="import">
 	<link href="../bower_components/paper-material/paper-material.html" rel="import">
 	<link href="../bower_components/iron-icons/iron-icons.html" rel="import">
 	<link href="../bower_components/paper-fab/paper-fab.html" rel="import">
+	
+<!-- 	<link href="../bower_components/iron-input/iron-input.html" rel="import"> -->
+<!-- 	<link href="../bower_components/paper-button/paper-button.html" rel="import"> -->
 </head>
 
 <dom-module id="todo-element" attributes="task user rid">
@@ -102,8 +103,8 @@
     	},
     	time: {
 	    	type: String,
-	    	value: new Date().toLocaleString()//.toLocaleDateString()//, toLocaleTimeString()
-    	},
+	    	value: new Date().toLocaleString()
+	    },
 		completed: {
 	    	type: Boolean,
 			value: false,

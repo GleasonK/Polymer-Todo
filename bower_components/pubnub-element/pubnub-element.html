@@ -365,32 +365,34 @@ Place it inside of a `<core-pubnub>` element.
         * @event reconnect
         */
     properties: {
-    channel: {
-      type : Object,
-      value: ''
-    },
-    messages: {
-      type : Array,
-      value: []
-    },
-    timetoken: Number,
-    windowing: {
-      type : Number,
-      value: 10
-    },
-    heartbeat: {
-      type : Number,
-      value: 320
-    },
-    state: Object,
-    restore: Boolean
+	    channel: {
+	      type : Object,
+	      value: ''
+	    },
+	    messages: {
+	      type : Array,
+	      value: []
+	    },
+	    presence: {
+		  type : Array,
+		  value: []
+	    },
+	    timetoken: Number,
+	    windowing: {
+	      type : Number,
+	      value: 10
+	    },
+	    heartbeat: {
+	      type : Number,
+	      value: 320
+	    },
+	    state: Object,
+	    restore: Boolean
     },
       subscribe: true,
       ready: function() {
         var self = this;
         this.sub = function() {
-          self.messages = [];
-          self.presence = [];
           self.pubnub.subscribe({
             channel: self.channel,
             timetoken: self.timetoken,
@@ -415,7 +417,7 @@ Place it inside of a `<core-pubnub>` element.
             callback: function(m) {
               // Fire Message Event.
               // console.log("message");
-              console.log(m);
+              // console.log(m);
               //self.messages.push(m);
               self.push('messages', m);
               // console.log(self.messages);

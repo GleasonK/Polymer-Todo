@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-
+	<link href="../bower_components/polymer/polymer.html" rel="import">
 	<link href="../elements/todo-element.html" rel="import">
 	<link href="../bower_components/paper-drawer-panel/paper-drawer-panel.html" rel="import">
 	<link href="../bower_components/paper-header-panel/paper-header-panel.html" rel="import">
@@ -12,7 +12,7 @@
 	<link href="../bower_components/paper-item/paper-item.html" rel="import">
 	<link href="../bower_components/paper-input/paper-input.html" rel="import">
 	<link href="../bower_components/iron-icons/iron-icons.html" rel="import">
-	<link href="../bower_components/iron-input/iron-input.html" rel="import">
+<!-- 	<link href="../bower_components/iron-input/iron-input.html" rel="import"> -->
 	<link href="../bower_components/pubnub-element/pubnub-element.html" rel="import">
 
 </head>
@@ -21,7 +21,7 @@
 	<style>
 	.list {
 		padding: 0;
-		border-right: 1px solid #ccc;
+/* 		border-right: 1px solid #ccc; */
 	}
 	
 	.list paper-item {
@@ -98,8 +98,12 @@
 				</paper-menu>
 			</paper-header-panel>
 			<paper-header-panel main class="main-panel" flex>
-				<paper-toolbar flex>
+				<paper-toolbar>
 					<paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
+					<paper-item>
+						<iron-icon icon="icons:face"></iron-icon>
+						<span id="here">0</span>
+					</paper-item>
 					<paper-item>Active Tasks</paper-item>
 				</paper-toolbar>
 				<div style="border-left: 1px solid #ccc;">
@@ -123,10 +127,10 @@
 			</paper-header-panel>
 		</paper-drawer-panel> 
 		<core-pubnub 
-	        publish_key="demo" 
-	        subscribe_key="demo">
+	        publish_key="pub-c-7fad26fe-6c38-4940-b9c3-fbd19a9633af" 
+	        subscribe_key="sub-c-30c17e1a-0007-11e5-a8ef-0619f8945a4f">
 	        <core-pubnub-publish id="pub" channel="todo" message="Hello"> </core-pubnub-publish>
-	        <core-pubnub-subscribe id="sub" channel="todo" messages="{{messages}}" on-callback="subscribeCallback">     
+	        <core-pubnub-subscribe id="sub" channel="todo" messages="{{messages}}" presence="{{present}}" on-callback="subscribeCallback"></core-pubnub-subscribe>   
         </core-pubnub> 
 	</template>
 </dom-module>
@@ -142,7 +146,7 @@
     	// declare properties for the element's public API
 		todo: {
 			type: Array,
-			value: [{user:"Kevin",task:"Watch the Cavs win!",rid:0}, {user:"Justin",task:"Sign up for PubNub",rid:1}, {user:"Tomomi",task:"Think of task.",rid:2}]
+			value: [{user:"Kevin",task:"Watch the Cavs lose :(",rid:0}, {user:"Justin",task:"Sign up for PubNub",rid:1}, {user:"Tomomi",task:"Think of task.",rid:2}]
 		},
 		done:{
 			type:Array,
@@ -152,13 +156,12 @@
 			type: Array,
 			value: []
 		},
-		test: {
-			type: Boolean,
-			value: true
+		present: {
+			type: Array,
+			value: []
 		}
     },
     handleComplete: function(e){
-	    // this.$.completed.appendChild(e.target);
 	    var idx = findWithAttr(this.todo, 'rid', e.target.rid);
 	    var itm = this.todo[idx];
 	    itm.task = e.target.task;
@@ -166,7 +169,6 @@
 	    itm.type = "done";
 	    this.$.pub.message = itm;
 	    this.$.pub.publish();
-	    //this.push('done',itm);
     },
     postTask: function(e) {
 	    var tsk = this.$.tTask.value;
@@ -177,13 +179,10 @@
 		}
 	    if (usr==""){ usr = randItem(names1) + "-" + randItem(names2); }
 	    this.$.pub.message = {type:"todo", task:tsk, user:usr, rid:randID()};
-	    this.$.pub.publish()
+	    this.$.pub.publish();
 	    this.$.tTask.value = "";
-	    //this.unshift('todo', {user:user, task:task, id:randID()});	
     },
     subscribeCallback: function(e){
-	    console.log(e.target.messages[0]);
-	    console.log(this.messages[0].type + this.messages[0].task + this.messages[0].rid);
 	    while(this.messages.length > 0){
 		    var item = this.messages.pop();
 		    switch(item.type){
@@ -192,7 +191,6 @@
 			    	break;
 			    case "done":
 			    	var idx = findWithAttr(this.todo, 'rid',item.rid);
-			    	console.log("idx: " + idx);
 				    var itm = this.splice('todo', idx, 1)[0];
 				    itm.task = item.task;
 				    itm.user = item.user;
@@ -205,8 +203,13 @@
     },
 	ready: function(e){
 		this.addEventListener('complete', this.handleComplete);
-		console.log(this.todo);
 		this.$.tUser.value = randItem(names1) + "-" + randItem(names2);
+		console.log(this.present);
+	this.addEventListener('presence', presChange);
+	function presChange(e){
+		var pres = this.present.pop()
+		this.$.here.innerHTML = pres.occupancy;
+	}
 	}
   });
   var names1 = ["red","orange","yellow","green","blue","indigo","purple"];
