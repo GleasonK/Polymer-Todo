@@ -2,53 +2,7 @@
 
 If you kept up with Google I/O 2015, then you likely saw that Polymer 1.0 has been released to the public. If you have been around since Polymer 0.5, then you likely saw that all your favorite building blocks have been deprecated. For all those who have used 0.5, consider this a migration assistant. Those of you who have never seen Polymer before, you're in for a treat!
 
-###Intro to Polymer 1.0
-
-[Polymer] is a library that leverages [web components](http://webcomponents.org) to allow you to define and use custom HTML elements. With custom elements, designing and building a website becomes a game of Legos. 
-
-Polymer 1.0 replaces the shadow DOM polyfill with a lightweight shim, reduces the code size, and speeds up data-binding for an all around smoother experience.
-
-When building with Polymer you must import elements before you use them. A standard polymer use looks like this:
-
-```
-<link rel="import" href="paper-fab"> 
-...
-<paper-fab icon="send"></paper-fab>
-```
-
-One of the best parts of Polymer (in my design-inept opinion), is the use of [Material Design](http://www.google.com/design/spec/material-design/introduction.html). Most of us have probably seen Material Design on [Android Lollipop](http://www.android.com/versions/lollipop-5-0/), but the specification for visual and interaction design spans all different screen sizes. These elements in Polymer are called `paper elements`, and they are made to adapt screen sizes and look beautiful on any device.
-
-## 1. Creating Your To-Do App with Paper Elements
-
-### 1.1 Install Polymer
-In order to use Polymer, we must first install it. The recommended method is through [Bower](https://www.polymer-project.org/1.0/docs/start/getting-the-code.html#using-bower). Follow the [official instructions](http://bower.io) to install Bower. Then from the terminal, install Polymer with the following lines.
-
-	$ cd <project-directory>
-	$ bower init
-	$ bower install --save Polymer/polymer#^1.0.0
-
-Now make your `index.html` and load the `webcomponents-lite.js` file. For those who used v0.5, bower includes all `webcomponents` script files, however, the new components are in the `-lite` file, so choose that one.
-
-```
-<!DOCTYPE html>
-<html>
-	<head>
-		<script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
-	</head>
-	<body>
-	...
-</html>
-```
-
-### 1.2 Downloading Paper Elements
-
-First, I want to tell you that there are loads of great looking paper elements, so if you decide to choose different elements, I fully support you. You can see all elements in the [Polymer Element Catalog](https://elements.polymer-project.org). Version 5.0 users, note that all `core-elements` are deprecated. Now the core building blocks are part of `iron-elements`. 
-
-As a general syntax, if you see something you like in the catalog, downloading the element with Bower looks as follows:
-
-	$ bower install polymerelements/<element-name>
-	
-<img src="img/todo_full.png" width="800" alt="full_labeled">
+<img src="img/screen.png" width="800" alt="full_labeled">
 
 The elements that I use in this demo are:
 
