@@ -18,7 +18,7 @@ The beauty of making an app with polymer is the responsive material design that 
 
 ### 1. Clone this Repository
 
-This repo has all the used elements downloaded so you do not have to run a bower install. However, all dependencies are saved in the bower.json file though, so if you want to update them it is simple using bower.
+This repo has all the used elements downloaded so you do not have to run a bower install. However, all dependencies are saved in the bower.json file, so if you want to update them it is simple using `bower update`.
 
 
 ### 2. Serve the Files on Localhost
