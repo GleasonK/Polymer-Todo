@@ -49,6 +49,11 @@
 		position: relative;
 	}
 	
+	paper-menu{
+		height: 80%;
+		overflow: auto;
+	}
+	
 	#todos {
 		overflow-y: scroll;
 		height: 66vh;
@@ -80,6 +85,20 @@
 	paper-toolbar {
 		background:#D32F2F;
 	}
+	
+	#made-with {
+		width:100%;
+		margin:0;
+		position: fixed;
+		bottom: 0;
+		text-align: center;
+	}
+	
+	#made-with img {
+		width: 35%;
+		padding: 10px;
+	}
+	
 
 	</style>
   
@@ -87,7 +106,7 @@
 		<paper-drawer-panel>
 			<paper-header-panel class="side-panel" drawer>
 				<paper-toolbar>
-					<paper-item><a href="http://www.pubnub.com/"><img src="../img/PoweredByPubNubWhite.png" style="width: 60%;"/></a></paper-item>
+					<paper-item>Completed Tasks</paper-item>
 				</paper-toolbar>
 				<paper-menu id="completed" class="list">
 					<template is="dom-if" if="{{!done.length}}">
@@ -99,6 +118,9 @@
 						<paper-item>{{item.task}}<i style="margin-left: 5px;">{{item.user}}</i></paper-item>
 					</template>
 				</paper-menu>
+				<paper-material id="made-with" elevation="2">
+					<a href="http://www.pubnub.com/"><img src="../img/made-with.png"/></a>
+				</div>
 			</paper-header-panel>
 			<paper-header-panel main class="main-panel">
 				<paper-toolbar>
@@ -144,7 +166,6 @@
     is: "todo-app",
 
     // add properties and methods on the element's prototype
-
     properties: {
     	// declare properties for the element's public API
 		todo: {
@@ -197,7 +218,7 @@
 				    var itm = this.splice('todo', idx, 1)[0];
 				    itm.task = item.task;
 				    itm.user = item.user;
-				    this.push('done',itm);
+				    this.unshift('done',itm);
 				    break;
 				default:
 					continue;
