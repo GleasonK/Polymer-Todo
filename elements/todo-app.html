@@ -189,6 +189,15 @@
 	    this.$.pub.message = itm;
 	    this.$.pub.publish();
     },
+    handleEdit: function(e){
+	    var idx = findWithAttr(this.todo, 'rid', e.target.rid);
+	    var itm = this.todo[idx];
+	    itm.task = e.target.task;
+	    itm.user = this.$.tUser.value;
+	    itm.type = "edit";
+	    this.$.pub.message = itm;
+	    this.$.pub.publish();
+    },
     postTask: function(e) {
 	    var tsk = this.$.tTask.value;
 	    var usr = this.$.tUser.value;
@@ -210,11 +219,21 @@
 			    	break;
 			    case "done":
 			    	var idx = findWithAttr(this.todo, 'rid',item.rid);
+				    
+				    if (idx == -1){return;}
 				    var itm = this.splice('todo', idx, 1)[0];
 				    itm.task = item.task;
 				    itm.user = item.user;
 				    this.unshift('done',itm);
 				    break;
+				case "edit":
+					var idx = findWithAttr(this.todo, 'rid',item.rid);
+					if (idx == -1){return;}
+					var itm = this.splice('todo', idx, 1)[0];
+				    itm.task = item.task;
+				    itm.user = item.user;
+					this.unshift('todo',{task:item.task, user:item.user, rid:item.rid});
+					break;
 				default:
 					continue;
 		    }
@@ -222,6 +241,7 @@
     },
 	ready: function(e){
 		this.addEventListener('complete', this.handleComplete);
+		this.addEventListener('edit', this.handleEdit);
 		this.$.tUser.value = randItem(names1) + "-" + randItem(names2);
 		console.log(this.present);
 		this.addEventListener('presence', presChange);
@@ -249,6 +269,6 @@
         if(array[i][attr] === value) {
             return i;
         }
-    }
+    } return -1;
   }
 </script>
