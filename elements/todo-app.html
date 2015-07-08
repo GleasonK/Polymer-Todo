@@ -49,11 +49,6 @@
 		position: relative;
 	}
 	
-	paper-menu{
-		height: 80%;
-		overflow: auto;
-	}
-	
 	#todos {
 		overflow-y: scroll;
 		height: 66vh;
@@ -138,7 +133,7 @@
 						<paper-input id="tUser" char-counter label="Username" maxlength="16" error="maximum characters exceeded" style="width:75%;display: inline-block" ></paper-input> 
 						<paper-fab icon="icons:add" on-tap="postTask"></paper-fab>
 					</paper-material>
-					<div id="todos" flex>
+					<div id="todos">
 						<template is="dom-if" if="{{!todo.length}}">
 							<paper-material class="task-empty">
 								<paper-item elevation="2">No Tasks remain. Updates are Real-Time so stay tuned!</paper-item>
@@ -229,11 +224,16 @@
 		this.addEventListener('complete', this.handleComplete);
 		this.$.tUser.value = randItem(names1) + "-" + randItem(names2);
 		console.log(this.present);
-	this.addEventListener('presence', presChange);
-	function presChange(e){
-		var pres = this.present.pop()
-		this.$.here.innerHTML = pres.occupancy;
-	}
+		this.addEventListener('presence', presChange);
+		function presChange(e){
+			var pres = this.present.pop()
+			this.$.here.innerHTML = pres.occupancy;
+		}
+		var todos = this.$.todos;
+		window.onresize = function(event) {
+			todos.style.height = window.innerHeight-200;
+		};
+		window.onresize();
 	}
   });
   var names1 = ["red","orange","yellow","green","blue","indigo","purple"];
