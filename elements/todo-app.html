@@ -60,7 +60,7 @@
   
 	paper-fab {
 	    position: absolute;
-	    background: #3f51b5;
+	    background: #00BCD4;
 	    bottom: 2vh;
 	    right: 2vw;
     }
@@ -77,18 +77,22 @@
 		color: #6f6f6f;
 	}
 
+	paper-toolbar {
+		background:#D32F2F;
+	}
+
 	</style>
   
 	<template>
 		<paper-drawer-panel>
 			<paper-header-panel class="side-panel" drawer>
 				<paper-toolbar>
-					<paper-item>Completed Tasks</paper-item>
+					<paper-item><img src="../img/PoweredByPubNubWhite.png" style="width: 60%;"/></paper-item>
 				</paper-toolbar>
 				<paper-menu id="completed" class="list">
 					<template is="dom-if" if="{{!done.length}}">
 						<paper-material class="task-empty">
-							<paper-item>Completed tasks will appear here!</paper-item>
+							<paper-item elevation="2">Completed tasks will appear here!</paper-item>
 						</paper-material>
 					</template>
 					<template id="done" is="dom-repeat" items="{{done}}">
@@ -96,7 +100,7 @@
 					</template>
 				</paper-menu>
 			</paper-header-panel>
-			<paper-header-panel main class="main-panel" flex>
+			<paper-header-panel main class="main-panel">
 				<paper-toolbar>
 					<paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
 					<paper-item>
@@ -107,7 +111,7 @@
 				</paper-toolbar>
 				<div style="border-left: 1px solid #ccc;">
 					<!-- To create a new Todo -->
-					<paper-material id="todoEntry" flex>
+					<paper-material id="todoEntry" elevation="2">
 						<paper-input id="tTask" label="Task"></paper-input>
 						<paper-input id="tUser" char-counter label="Username" maxlength="16" error="maximum characters exceeded" style="width:75%;display: inline-block" ></paper-input> 
 						<paper-fab icon="icons:add" on-tap="postTask"></paper-fab>
@@ -115,7 +119,7 @@
 					<div id="todos" flex>
 						<template is="dom-if" if="{{!todo.length}}">
 							<paper-material class="task-empty">
-								<paper-item>No Tasks remain. Updates are Real-Time so stay tuned!</paper-item>
+								<paper-item elevation="2">No Tasks remain. Updates are Real-Time so stay tuned!</paper-item>
 							</paper-material>
 						</template>
 						<template id="tasks" is="dom-repeat" items="{{todo}}">
@@ -145,7 +149,7 @@
     	// declare properties for the element's public API
 		todo: {
 			type: Array,
-			value: [{user:"Kevin",task:"Watch the Cavs lose :(",rid:0}, {user:"Justin",task:"Sign up for PubNub",rid:1}, {user:"Tomomi",task:"Think of task.",rid:2}]
+			value: [{user:"Kevin",task:"Make a Polymer app!",rid:0}, {user:"Justin",task:"Drink some scotch.io",rid:1}, {user:"Tomomi",task:"Think of task.",rid:2}]
 		},
 		done:{
 			type:Array,
